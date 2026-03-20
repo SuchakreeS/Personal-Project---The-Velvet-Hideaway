@@ -1,6 +1,7 @@
 import {z} from "zod"
 import bcrypt from "bcrypt"
 
+// Register Schema
 export const registerSchema = z.object({
     email: z.string().email().min(2, "Please input the correct email"),
     username: z.string().min(2, "Please input the username"),
@@ -16,4 +17,10 @@ export const registerSchema = z.object({
         password : await bcrypt.hash(data.password, 8)
     }
     return output
+})
+
+// Login Schema
+export const loginSchema = z.object({
+    email: z.string().email().min(2, ("Please enter valid email")),
+    password: z.string().min(4, "Password must be at least 4 characters")
 })
