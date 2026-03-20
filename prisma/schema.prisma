@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  //model
+  id             Int      @id @default(autoincrement())
+  username       String   @unique
+  email          String   @unique
+  password       String
+  role           Role
+  info           String?
+  profilePicture String?
+  createdAt      DateTime @default(now())
+
+  //relation
+  recipes Recipe[]
+  badges  UserBadge[]
+}
+
+model Recipe {
+  //model
+  id           Int      @id @default(autoincrement())
+  name         String
+  ingredients  String
+  instructions String
+  image        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  //relation
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int?
+
+  category     Category?   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId   Int?
+  baseSpirit   BaseSpirit? @relation(fields: [baseSpiritId], references: [id], onDelete: Cascade)
+  baseSpiritId Int?
+}
+
+model BaseSpirit {
+  //model
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  details String?
+  recipes Recipe[]
+}
+
+model Category {
+  //model
+  id      Int     @id @default(autoincrement())
+  name    String
+  details String?
+
+  //relation
+  recipes Recipe[]
+}
+
+model Badge {
+  //model
+  id          Int         @id @default(autoincrement())
+  name        String
+  requirement String
+
+  //relation
+  userBadges  UserBadge[]
+}
+
+model UserBadge {
+  //model
+  archievedAt DateTime @id @default(now())
+
+  //relation
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int?
+  badge       Badge?   @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  badgeId     Int?
+  @@unique([userId, badgeId])
+}
