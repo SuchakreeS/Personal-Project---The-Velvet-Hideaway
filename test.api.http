@@ -1,0 +1,22 @@
+@BASE_URL= http://localhost:8875
+
+##Register
+POST {{BASE_URL}}/auth/register
+
+###Login
+POST {{BASE_URL}}/auth/Login
+
+###Recipes
+GET {{BASE_URL}}/recipes/
+
+###Spirits
+GET {{BASE_URL}}/spirits
+
+###User
+GET {{BASE_URL}}/user
+
+###Admin
+GET {{BASE_URL}}/admin
+
+###Not Found
+GET {{BASE_URL}}/fail
