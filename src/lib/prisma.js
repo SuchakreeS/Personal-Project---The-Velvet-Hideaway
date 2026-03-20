@@ -12,4 +12,6 @@ const adapter = new PrismaMariaDb({
 
 const prisma = new PrismaClient({adapter})
 
+prisma.$queryRawUnsafe('Show Tables').then(console.log)
+
 export {prisma}
