@@ -12,17 +12,17 @@ export async function register(req, res, next) {
 
     // Dupe check
     const duped = await prisma.user.findUnique({
-        where: {email: data.email}
+        where: { email: data.email }
     })
-    if(duped){
+    if (duped) {
         return next(createHttpError[409]('This email is already in used'))
     }
-//create user
-const result = await prisma.user.create({data : data})
-res.json({
-    message: "Register Success",
-    result : result
-})
+    //create user
+    const result = await prisma.user.create({ data: data })
+    res.json({
+        message: "Register Success",
+        result: result
+    })
 }
 
 
@@ -30,23 +30,23 @@ res.json({
 export async function login(req, res, next) {
     // Validation
     const data = loginSchema.parse(req.body)
-    
+
     // Find User
     const foundUser = await prisma.user.findUnique({
-        where: {email : data.email}
+        where: { email: data.email }
     })
-    if(!foundUser){
+    if (!foundUser) {
         return next(createHttpError[409]("No user found"))
     }
 
     // Check password
     let passCorrect = await bcrypt.compare(data.password, foundUser.password)
-    if (!passCorrect){
+    if (!passCorrect) {
         return next(createHttpError[401]("Login failed"))
     }
 
     // Token create
-    const payload = {id: foundUser.id}
+    const payload = { id: foundUser.id }
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
         algorithm: 'HS256',
         expiresIn: '15d'
@@ -54,6 +54,10 @@ export async function login(req, res, next) {
     res.json({
         message: "login Success",
         user: foundUser.username,
-        token : token
+        token: token
     })
 } 
+
+export const getMe = (req, res) => {
+    res.json({user: req.user})
+}
