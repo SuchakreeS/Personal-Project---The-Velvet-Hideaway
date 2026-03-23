@@ -1,5 +1,5 @@
 @BASE_URL= http://localhost:8875
-@token= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzc0MTUwNTk3LCJleHAiOjE3NzU0NDY1OTd9.xHU90BtZpT93ebVH3M7zfsCq3x2JkuH_6TxncOLVmb0
+@token= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzc0MjU1MTgyLCJleHAiOjE3NzU1NTExODJ9.Eh4VwUUMwDkLVpIB3zgYyTLph2PaY31Audm3202L34I 
 
 ##Register
 POST {{BASE_URL}}/auth/register
