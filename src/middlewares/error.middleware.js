@@ -15,3 +15,5 @@ export default function (err, req, res, next) {
         message: err.message || "Server Error"
     })
 }
+
+// Token error
