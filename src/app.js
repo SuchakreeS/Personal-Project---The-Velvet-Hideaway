@@ -3,6 +3,7 @@ import authRoute from './routes/auth.route.js'
 import createHttpError from 'http-errors'
 import userRoute from './routes/user.route.js'
 import cors from 'cors'
+import recipeRoute from './routes/recipe.route.js'
 
 const app = express()
 app.use(express.json())
@@ -13,7 +14,7 @@ app.use(cors({
 }));
 
 app.use('/auth', authRoute)
-app.use('/recipes', (req, res) => {res.send('recipes')})
+app.use('/recipes', recipeRoute)
 app.use('/spirits', (req, res) => {res.send('spirits list')})
 app.use('/user', userRoute)
 app.use('/admin', (req, res) => {res.send('Admin')})

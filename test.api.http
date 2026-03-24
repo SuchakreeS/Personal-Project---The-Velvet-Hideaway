@@ -1,5 +1,5 @@
 @BASE_URL= http://localhost:8875
-@token= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzc0MjU1MTgyLCJleHAiOjE3NzU1NTExODJ9.Eh4VwUUMwDkLVpIB3zgYyTLph2PaY31Audm3202L34I 
+@token= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNzc0MzM4NjcxLCJleHAiOjE3NzU2MzQ2NzF9.4cawKsCK1ghc3CSMSkX2QoK8g_RY3DuBejVBV10AKyg
 
 ##Register
 POST {{BASE_URL}}/auth/register
@@ -27,6 +27,20 @@ Authorization: {{token}}
 
 ###Recipes
 GET {{BASE_URL}}/recipes/
+
+###Recipe Post
+POST {{BASE_URL}}/recipes
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "name": "Test Recipe",
+    "ingredients": "Test ingredients",
+    "instructions": "Test Instructions",
+    "image": "",
+    "categoryId": 1,
+    "baseSpiritId": 1
+}
 
 ###Spirits
 GET {{BASE_URL}}/spirits
