@@ -4,6 +4,8 @@ import createHttpError from 'http-errors'
 import userRoute from './routes/user.route.js'
 import cors from 'cors'
 import recipeRoute from './routes/recipe.route.js'
+import categoryRoute from './routes/category.route.js'
+// import categoryRoute from './routes/category.route.js'
 
 const app = express()
 app.use(express.json())
@@ -15,6 +17,7 @@ app.use(cors({
 
 app.use('/auth', authRoute)
 app.use('/recipes', recipeRoute)
+app.use('/categories', categoryRoute)
 app.use('/spirits', (req, res) => {res.send('spirits list')})
 app.use('/user', userRoute)
 app.use('/admin', (req, res) => {res.send('Admin')})

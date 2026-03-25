@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -12,84 +7,71 @@ datasource db {
   provider = "mysql"
 }
 
-enum Role {
-  USER
-  ADMIN
+model badge {
+  id          Int         @id @default(autoincrement())
+  name        String
+  requirement String
 }
 
-model User {
-  //model
-  id             Int      @id @default(autoincrement())
-  username       String   @unique
-  email          String   @unique
-  password       String
-  role           Role     @default(USER)
-  info           String?
-  profilePicture String?
-  createdAt      DateTime @default(now())
-
-  //relation
-  recipes Recipe[]
-  badges  UserBadge[]
-}
-
-model Recipe {
-  //model
-  id           Int      @id @default(autoincrement())
-  name         String
-  ingredients  String
-  instructions String
-  image        String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  //relation
-  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId Int?
-
-  category     Category?   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  categoryId   Int?
-  baseSpirit   BaseSpirit? @relation(fields: [baseSpiritId], references: [id], onDelete: Cascade)
-  baseSpiritId Int?
-}
-
-model BaseSpirit {
-  //model
+model basespirit {
   id      Int      @id @default(autoincrement())
   name    String   @unique
   details String?
-  recipes Recipe[]
+  recipes recipe[]
 }
 
-model Category {
-  //model
-  id      Int     @id @default(autoincrement())
+model category {
+  id      Int      @id @default(autoincrement())
   name    String
   details String?
-
-  //relation
-  recipes Recipe[]
+  recipes recipe[]
 }
 
-model Badge {
-  //model
-  id          Int    @id @default(autoincrement())
-  name        String
-  requirement String
+model recipe {
+  id           Int        @id @default(autoincrement())
+  name         String
+  ingredients  String     @db.Text
+  instructions String     @db.Text
+  image        String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 
-  //relation
-  userBadges UserBadge[]
+  userId       Int?
+  categoryId   Int?
+  baseSpiritId Int?
+
+  // Relations - ensure these names match exactly what you use in .include()
+  user         user?       @relation(fields: [userId], references: [id])
+  category     category?   @relation(fields: [categoryId], references: [id])
+  basespirit   basespirit? @relation(fields: [baseSpiritId], references: [id])
+
+  @@index([baseSpiritId])
+  @@index([categoryId])
+  @@index([userId])
 }
 
-model UserBadge {
-  //model
+model user {
+  id             Int       @id @default(autoincrement())
+  username       String    @unique
+  email          String    @unique
+  password       String
+  role           user_role @default(USER)
+  info           String?
+  profilePicture String?
+  createdAt      DateTime  @default(now())
+  recipes        recipe[]
+}
+
+model userbadge {
   archievedAt DateTime @id @default(now())
-
-  //relation
-  user    User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId  Int?
-  badge   Badge? @relation(fields: [badgeId], references: [id], onDelete: Cascade)
-  badgeId Int?
+  userId      Int?
+  badgeId     Int?
 
   @@unique([userId, badgeId])
+  @@index([badgeId])
+}
+
+enum user_role {
+  USER
+  ADMIN
 }
