@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ###Get User Info
 GET {{BASE_URL}}/user
-Authorization: {{token2}}
+Authorization: {{token}}
 
 ###Recipes
 GET {{BASE_URL}}/recipes
@@ -36,7 +36,7 @@ Authorization: {{token2}}
 
 ###Recipe Post
 POST {{BASE_URL}}/recipes
-Authorization: {{token2}}
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -44,7 +44,7 @@ Content-Type: application/json
     "ingredients": "Test ingredients",
     "instructions": "Test Instructions",
     "image": "",
-    "categoryId": 1,
+    "categoryId": 2,
     "baseSpiritId": 1
 }
 
@@ -58,7 +58,7 @@ Content-Type: application/json
     "ingredients": "Test ingredients",
     "instructions": "Test Instructions",
     "image": "",
-    "categoryId": 1,
+    "categoryId": 2,
     "baseSpiritId": 1
 }
 

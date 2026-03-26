@@ -5,6 +5,7 @@ import userRoute from './routes/user.route.js'
 import cors from 'cors'
 import recipeRoute from './routes/recipe.route.js'
 import categoryRoute from './routes/category.route.js'
+import spiritRoute from './routes/base.spirit.route.js'
 // import categoryRoute from './routes/category.route.js'
 
 const app = express()
@@ -18,7 +19,7 @@ app.use(cors({
 app.use('/auth', authRoute)
 app.use('/recipes', recipeRoute)
 app.use('/categories', categoryRoute)
-app.use('/spirits', (req, res) => {res.send('spirits list')})
+app.use('/spirits', spiritRoute)
 app.use('/user', userRoute)
 app.use('/admin', (req, res) => {res.send('Admin')})
 

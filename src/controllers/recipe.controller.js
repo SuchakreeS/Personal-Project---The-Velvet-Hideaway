@@ -28,7 +28,7 @@ export const getUserRecipes = async (req, res, next) => {
         const userId = req.user.id
         const result = await prisma.recipe.findMany({
             where: {
-                userId : userId
+                userId: userId
             },
             orderBy: {
                 createdAt: 'desc'
@@ -44,7 +44,7 @@ export const getUserRecipes = async (req, res, next) => {
             }
         })
         res.json(result)
-    } catch(err) {
+    } catch (err) {
         next(err)
     }
 }
@@ -52,12 +52,23 @@ export const getUserRecipes = async (req, res, next) => {
 
 
 export const createRecipe = async (req, res) => {
-    const {name, ingredients, instructions, image, categoryId, baseSpiritId} = req.body
+    const { name, ingredients, instructions, image, categoryId, baseSpiritId } = req.body
 
-    const data = {name, ingredients, instructions, image, categoryId, baseSpiritId, userId: req.user.id}
-
-    const result = await prisma.recipe.create({data})
-
+    const result = await prisma.recipe.create({
+        data: {
+            name,
+            ingredients,
+            instructions,
+            image,
+            categoryId: Number(categoryId),
+            baseSpiritId: Number(baseSpiritId),
+            userId: req.user.id
+        },
+        include: {
+            category: true,
+            basespirit: true
+        }
+    });
     res.status(201).json({
         message: 'New recipe added',
         result
@@ -66,19 +77,19 @@ export const createRecipe = async (req, res) => {
 
 
 export const updateRecipe = async (req, res, next) => {
-    const {id} = req.params
-    const {name, ingredients, instructions, image, categoryId, baseSpiritId} = req.body
+    const { id } = req.params
+    const { name, ingredients, instructions, image, categoryId, baseSpiritId } = req.body
 
     const foundRecipe = await prisma.recipe.findUnique({
-        where: {id : +id}
+        where: { id: +id }
     })
-    if(!foundRecipe || req.user.id !== foundRecipe.userId){
+    if (!foundRecipe || req.user.id !== foundRecipe.userId) {
         return next(createHttpError[400]("Cannot Edit!"))
     }
 
     const result = await prisma.recipe.update({
-        where: {id: +id},
-        data: {name, ingredients, instructions, image, categoryId, baseSpiritId}
+        where: { id: +id },
+        data: { name, ingredients, instructions, image, categoryId, baseSpiritId }
     })
     res.json({
         message: "Recipe Updated",
@@ -87,16 +98,16 @@ export const updateRecipe = async (req, res, next) => {
 }
 
 export const deletRecipe = async (req, res, next) => {
-    const {id} = req.params
+    const { id } = req.params
     const foundRecipe = await prisma.recipe.findUnique({
-        where: {id : +id}
+        where: { id: +id }
     })
-    if(!foundRecipe || req.user.id !== foundRecipe.userId){
+    if (!foundRecipe || req.user.id !== foundRecipe.userId) {
         return next(createHttpError[400]("Cannot Delete Recipe"))
     }
 
     const result = await prisma.recipe.delete({
-        where: {id: +id}
+        where: { id: +id }
     })
     res.json({
         message: "Recipe deleted"
