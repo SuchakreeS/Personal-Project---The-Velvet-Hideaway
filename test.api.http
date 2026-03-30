@@ -27,6 +27,17 @@ Content-Type: application/json
 GET {{BASE_URL}}/user
 Authorization: {{token}}
 
+###User Update
+PATCH {{BASE_URL}}/user/edit
+Authorization: {{token2}}
+Content-Type: application/json
+
+{
+    "username": "Test Change User",
+    "password": "654321",
+    "info": "Test Change Info"
+}
+
 ###Recipes
 GET {{BASE_URL}}/recipes
 
@@ -44,7 +55,7 @@ Content-Type: application/json
     "ingredients": "Test ingredients",
     "instructions": "Test Instructions",
     "image": "",
-    "categoryId": 2,
+    "categoryId": 1,
     "baseSpiritId": 1
 }
 
@@ -72,9 +83,6 @@ GET {{BASE_URL}}/categories
 
 ###Spirits
 GET {{BASE_URL}}/spirits
-
-###User
-GET {{BASE_URL}}/user
 
 ###Admin
 GET {{BASE_URL}}/admin

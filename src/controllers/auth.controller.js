@@ -58,6 +58,3 @@ export async function login(req, res, next) {
     })
 } 
 
-export const getMe = (req, res) => {
-    res.json({user: req.user})
-}
