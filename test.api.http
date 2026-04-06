@@ -1,15 +1,16 @@
 @BASE_URL= http://localhost:8875
-@token= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiaWF0IjoxNzc0NDA5NDE1LCJleHAiOjE3NzU3MDU0MTV9.a9cQvoMos2Z9xDhtctlyVoGREwoaYVs6tw6CpMuTjjg
+@token= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzc0OTMxOTMxLCJleHAiOjE3NzYyMjc5MzF9.HOxnl4Asci3qB7el4wsuuzOBA7mA4gTPe_Zlg3jB-OA
 
-@token2= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiaWF0IjoxNzc0NDA5OTA3LCJleHAiOjE3NzU3MDU5MDd9.6p1N3hjYPEkLhSuaCIJPx4ttGoaMvaYd06C-5-ONoRk
+# Admin Token
+@token2= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc1MDE1Nzc2LCJleHAiOjE3NzYzMTE3NzZ9.oz_Pe3Z9a5s_QEgTSHq78QEw_NP-Z_uPX-4XyOgqERw
 
 ##Register
 POST {{BASE_URL}}/auth/register
 Content-Type: application/json
 
 {
-    "username": "testuser51",
-    "email": "testuser51@mail.mail",
+    "username": "testuser08",
+    "email": "testuser08@mail.mail",
     "password": "123456",
     "confirmPassword": "123456"
 }
@@ -19,13 +20,13 @@ POST {{BASE_URL}}/auth/Login
 Content-Type: application/json
 
 {
-    "email": "testuser@mail.mail",
+    "email": "testadmin@mail.mail",
     "password": "123456"
 }
 
 ###Get User Info
 GET {{BASE_URL}}/user
-Authorization: {{token}}
+Authorization: {{token2}}
 
 ###User Update
 PATCH {{BASE_URL}}/user/edit
@@ -81,11 +82,62 @@ Authorization: {{token}}
 GET {{BASE_URL}}/categories
 
 
-###Spirits
+###Spirits Get
 GET {{BASE_URL}}/spirits
 
-###Admin
-GET {{BASE_URL}}/admin
+###Spirits Post
+POST {{BASE_URL}}/spirits
+Authorization: {{token2}}
+Content-Type: application/json
+
+{
+    "name": "Vodka2",
+    "details": "Russian Cyka Blyat",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/de/Smirnoff_Red_Label_8213.jpg"
+}
+
+###Spirits Edit
+PUT {{BASE_URL}}/spirits/24
+Authorization: {{token2}}
+Content-Type: application/json
+
+{
+    "name": "VodkaVodka",
+    "details": "Drink from motherland",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/d/de/Smirnoff_Red_Label_8213.jpg"
+}
+
+###Spirit Delete
+DELETE {{BASE_URL}}/spirits/3
+Authorization: {{token2}}
+
+###Category GET
+GET {{BASE_URL}}/categories
+Authorization: {{token2}}
+
+###Category CREATE
+POST {{BASE_URL}}/categories
+Authorization: {{token2}}
+Content-Type: application/json
+
+{
+    "name": "Holiday's vibe",
+    "details": "Enjoy your cocktails made with seasonal ingredients"
+}
+
+###Category UPDATE
+PUT {{BASE_URL}}/categories/3
+Authorization: {{token2}}
+Content-Type: application/json
+
+{
+    "name": "Vibes of holiday",
+    "details": "Enjoy your cocktails made with seasonal ingredients"
+}
+
+###Category DELETE
+DELETE {{BASE_URL}}/categories/3
+Authorization: {{token2}}
 
 ###Not Found
 GET {{BASE_URL}}/fail

@@ -4,7 +4,7 @@ import authenticateMiddleware from "../middlewares/authenticate.middleware.js";
 
 const recipeRoute = Router()
 
-recipeRoute.get('/', getAllRecipes)
+recipeRoute.get('/',getAllRecipes)
 
 recipeRoute.get('/user-recipes', authenticateMiddleware, getUserRecipes)
 

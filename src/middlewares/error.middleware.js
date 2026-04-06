@@ -16,4 +16,3 @@ export default function (err, req, res, next) {
     })
 }
 
-// Token error

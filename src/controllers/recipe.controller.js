@@ -1,3 +1,4 @@
+import cloudinary from "../lib/cloudinary.js";
 import { prisma } from "../lib/prisma.js"
 import createHttpError from 'http-errors'
 
@@ -51,28 +52,37 @@ export const getUserRecipes = async (req, res, next) => {
 
 
 
-export const createRecipe = async (req, res) => {
-    const { name, ingredients, instructions, image, categoryId, baseSpiritId } = req.body
-
-    const result = await prisma.recipe.create({
-        data: {
-            name,
-            ingredients,
-            instructions,
-            image,
-            categoryId: Number(categoryId),
-            baseSpiritId: Number(baseSpiritId),
-            userId: req.user.id
-        },
-        include: {
-            category: true,
-            basespirit: true
+export const createRecipe = async (req, res, next) => { // Added next
+    try {
+        const { name, ingredients, instructions, image, categoryId, baseSpiritId } = req.body
+        let imgUrl = image
+        
+        if(image && image.startsWith('data:image')) {
+            const uploadRes = await cloudinary.uploader.upload(image, {
+                folder: "VelvetRecipe"
+            })
+            imgUrl = uploadRes.secure_url
         }
-    });
-    res.status(201).json({
-        message: 'New recipe added',
-        result
-    })
+
+        const result = await prisma.recipe.create({
+            data: {
+                name,
+                ingredients,
+                instructions,
+                image: imgUrl,
+                categoryId: Number(categoryId),
+                baseSpiritId: Number(baseSpiritId),
+                userId: req.user.id
+            },
+            include: {
+                category: true,
+                basespirit: true
+            }
+        });
+        res.status(201).json({ message: 'New recipe added', result })
+    } catch (error) {
+        next(error) // This passes the error to your error middleware
+    }
 }
 
 

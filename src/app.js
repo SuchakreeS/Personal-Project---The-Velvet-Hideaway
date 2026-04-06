@@ -1,3 +1,4 @@
+// import express from 'express'
 import express from 'express'
 import authRoute from './routes/auth.route.js'
 import createHttpError from 'http-errors'
@@ -9,7 +10,14 @@ import spiritRoute from './routes/base.spirit.route.js'
 // import categoryRoute from './routes/category.route.js'
 
 const app = express()
-app.use(express.json())
+// app.use(express.json())
+
+const jsonParser = express.json({ limit: '10mb' });
+const urlEncodedParser = express.urlencoded({ limit: '10mb', extended: true });
+
+app.use(jsonParser);
+app.use(urlEncodedParser);
+
 app.use(cors({
     origin: ["http://localhost:5173"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
@@ -21,7 +29,6 @@ app.use('/recipes', recipeRoute)
 app.use('/categories', categoryRoute)
 app.use('/spirits', spiritRoute)
 app.use('/user', userRoute)
-app.use('/admin', (req, res) => {res.send('Admin')})
 
 app.use( (req, res, next) => {
     return next (createHttpError.NotFound())

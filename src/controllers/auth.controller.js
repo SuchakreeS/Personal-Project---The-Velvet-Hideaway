@@ -5,24 +5,35 @@ import { loginSchema, registerSchema } from '../validations/schema.js'
 import jwt from 'jsonwebtoken'
 
 export async function register(req, res, next) {
-    const { username, email, password, confirmPassword } = req.body
+    try {
+        const validatedData = await registerSchema.parseAsync(req.body);
+ 
+        const duped = await prisma.user.findUnique({
+            where: { email: validatedData.email }
+        });
+        
+        if (duped) {
+            return next(createHttpError[409]('This email is already in use'));
+        }
 
-    // Register Validation
-    const data = await registerSchema.parseAsync(req.body)
+        const hashedPassword = await bcrypt.hash(validatedData.password, 10);
+        const result = await prisma.user.create({ 
+            data: {
+                username: validatedData.username,
+                email: validatedData.email,
+                password: hashedPassword,
+                role: "USER"
+            }
+        });
 
-    // Dupe check
-    const duped = await prisma.user.findUnique({
-        where: { email: data.email }
-    })
-    if (duped) {
-        return next(createHttpError[409]('This email is already in used'))
+        res.json({
+            message: "Register Success",
+            result: { id: result.id, username: result.username, email: result.email }
+        });
+
+    } catch (err) {
+        next(err);
     }
-    //create user
-    const result = await prisma.user.create({ data: data })
-    res.json({
-        message: "Register Success",
-        result: result
-    })
 }
 
 
@@ -46,15 +57,19 @@ export async function login(req, res, next) {
     }
 
     // Token create
-    const payload = { id: foundUser.id }
+    const payload = { id: foundUser.id, role: foundUser.role || "USER"}
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
         algorithm: 'HS256',
         expiresIn: '15d'
     })
     res.json({
-        message: "login Success",
-        user: foundUser.username,
-        token: token
-    })
+            message: "login Success",
+            token: token,
+            user: {
+                id: foundUser.id,
+                username: foundUser.username,
+                role: foundUser.role
+            }
+        })
+    console.log(foundUser.role)
 } 
-

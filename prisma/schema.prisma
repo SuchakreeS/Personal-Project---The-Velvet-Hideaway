@@ -17,6 +17,7 @@ model basespirit {
   id      Int      @id @default(autoincrement())
   name    String   @unique
   details String?
+  image   String?
   recipes recipe[]
 }
 
