@@ -4,13 +4,54 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
 }
 
-model badge {
-  id          Int    @id @default(autoincrement())
-  name        String
-  requirement String
+// --- USER & AUTH ---
+
+model user {
+  id             Int         @id @default(autoincrement())
+  username       String      @unique
+  email          String      @unique
+  password       String
+  role           user_role   @default(USER)
+  info           String?
+  profilePicture String?
+  createdAt      DateTime    @default(now())
+  
+  // Relations
+  recipes        recipe[]
+  badges         userbadge[]
+}
+
+enum user_role {
+  USER
+  ADMIN
+}
+
+// --- RECIPE SYSTEM ---
+
+model recipe {
+  id           Int      @id @default(autoincrement())
+  name         String
+  ingredients  String   @db.Text
+  instructions String   @db.Text
+  image        String?  @db.Text
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  userId       Int?
+  categoryId   Int?
+  baseSpiritId Int?
+
+  // Relations
+  user         user?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  category     category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  basespirit   basespirit? @relation(fields: [baseSpiritId], references: [id], onDelete: SetNull)
+
+  @@index([baseSpiritId])
+  @@index([categoryId])
+  @@index([userId])
 }
 
 model basespirit {
@@ -28,51 +69,29 @@ model category {
   recipes recipe[]
 }
 
-model recipe {
-  id           Int      @id @default(autoincrement())
-  name         String
-  ingredients  String   @db.Text
-  instructions String   @db.Text
-  image        String?  @db.Text
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+// --- BADGE SYSTEM ---
 
-  userId       Int?
-  categoryId   Int?
-  baseSpiritId Int?
-
-  // Relations - ensure these names match exactly what you use in .include()
-  user       user?       @relation(fields: [userId], references: [id])
-  category   category?   @relation(fields: [categoryId], references: [id])
-  basespirit basespirit? @relation(fields: [baseSpiritId], references: [id])
-
-  @@index([baseSpiritId])
-  @@index([categoryId])
-  @@index([userId])
-}
-
-model user {
-  id             Int       @id @default(autoincrement())
-  username       String    @unique
-  email          String    @unique
-  password       String
-  role           user_role @default(USER)
-  info           String?
-  profilePicture String?
-  createdAt      DateTime  @default(now())
-  recipes        recipe[]
+model badge {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  requirement String      // Used for logic (e.g., "recipe_count_5")
+  image       String?     // URL to the badge icon
+  description String?     // Text shown to the user
+  users       userbadge[]
 }
 
 model userbadge {
-  archievedAt DateTime @id @default(now())
-  userId      Int?
-  badgeId     Int?
+  id          Int      @id @default(autoincrement())
+  achievedAt  DateTime @default(now())
+  
+  userId      Int
+  badgeId     Int
 
-  @@unique([userId, badgeId])
+  // Relations
+  user        user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  badge       badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, badgeId]) // Prevents duplicate badges for one user
+  @@index([userId])
   @@index([badgeId])
-}
-
-enum user_role {
-  USER
-  ADMIN
 }

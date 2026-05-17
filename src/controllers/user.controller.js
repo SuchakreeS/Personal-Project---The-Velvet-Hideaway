@@ -2,35 +2,59 @@ import bcrypt from 'bcrypt'
 import { prisma } from '../lib/prisma.js'
 
 export const getMe = (req, res) => {
-    res.json({user: req.user})
+    // req.user is usually populated by your auth middleware
+    res.json({ user: req.user })
 }
 
 export const userUpdate = async (req, res, next) => {
     try {
-        const {username, password,info } = req.body
+        const { username, password, info, profilePicture } = req.body
         const userId = req.user?.id
 
-        const updated = {}
-
-        if(username){
-            updated.username = username
-        }
-        if(info) {
-            updated.info = info
-        }
-        if(password) {
-            updated.password = await bcrypt.hash(password, 8)
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized: No user ID found" })
         }
 
+        const updatedData = {}
+
+        // Handle Username
+        if (username) {
+            updatedData.username = username
+        }
+
+        // Handle Biography (info)
+        // We check for undefined so that an empty string "" can still be saved
+        if (info !== undefined) {
+            updatedData.info = info
+        }
+
+        // Handle Avatar
+        if (profilePicture !== undefined) {
+            updatedData.profilePicture = profilePicture
+        }
+
+        // Handle Password Security
+        if (password) {
+            updatedData.password = await bcrypt.hash(password, 8)
+        }
+
+        // Perform Database Update
         const updatedUser = await prisma.user.update({
-            where: {id: Number(userId)},
-            data: updated
+            where: { id: Number(userId) },
+            data: updatedData
         })
+
+        // Remove password from the response object for security
+        const { password: _, ...userWithoutPassword } = updatedUser
+
         res.json({
             message: "Profile Updated",
-            updated: updatedUser
+            updated: userWithoutPassword
         })
-    } catch(err){
-        console.log(err)
+
+    } catch (err) {
+        console.error("Update Error:", err)
+        // Passes the error to your global error handler
+        next(err)
     }
 }

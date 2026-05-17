@@ -11,10 +11,10 @@ export default cloudinary
 export const uploadToCloudinary = async (file) => {
     const base64Img = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`
     const response = await cloudinary.uploader.upload(base64Img, {
-        folder:'VelvetHideaway',
+        folder: 'VelvetHideaway',
         resource_type: 'auto'
     })
-    return(
+    return (
         response.secure_url
     )
 }

@@ -112,13 +112,12 @@ const spiritData = [
 ];
 
 async function main() {
-    console.log('--- Cleaning Database ---');
-    await prisma.$executeRawUnsafe('SET FOREIGN KEY CHECKS = 0;');
-    await prisma.$executeRawUnsafe('TRUNCATE TABLE `User`;');
-    await prisma.$executeRawUnsafe('TRUNCATE TABLE `BaseSpirit`;');
-    await prisma.$executeRawUnsafe('TRUNCATE TABLE `Category`;');
-    await prisma.$executeRawUnsafe('TRUNCATE TABLE `Recipe`;');
-    await prisma.$executeRawUnsafe('SET FOREIGN KEY CHECKS = 1;');
+    console.log('--- Cleaning Database (PostgreSQL) ---');
+    // In PostgreSQL, we use CASCADE to handle foreign key dependencies
+    await prisma.$executeRawUnsafe('TRUNCATE TABLE "user" CASCADE;');
+    await prisma.$executeRawUnsafe('TRUNCATE TABLE "basespirit" CASCADE;');
+    await prisma.$executeRawUnsafe('TRUNCATE TABLE "category" CASCADE;');
+    await prisma.$executeRawUnsafe('TRUNCATE TABLE "recipe" CASCADE;');
 
     console.log('--- Seeding Users ---');
     for (const u of userData) {
