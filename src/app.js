@@ -15,8 +15,20 @@ const app = express()
 const jsonParser = express.json({ limit: '10mb' });
 const urlEncodedParser = express.urlencoded({ limit: '10mb', extended: true });
 
+// ... existing setup ...
 app.use(jsonParser);
 app.use(urlEncodedParser);
+
+app.options('*', cors({
+    origin: [
+        "https://personal-project-the-velvet-hideaway-frontend-qm66hbb8m.vercel.app",
+        "https://personal-project-the-velvet-hideaway-frontend-ffxcv5y9y.vercel.app",
+        process.env.FRONTEND_URL,
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ].filter(Boolean),
+    credentials: true,
+}));
 
 app.use(cors({
     origin: [
@@ -26,11 +38,12 @@ app.use(cors({
         "http://localhost:5173",
         "http://127.0.0.1:5173"
     ].filter(Boolean),
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
 }));
 
 app.use('/auth', authRoute)
+// ... rest of the file ...
 app.use('/recipes', recipeRoute)
 app.use('/categories', categoryRoute)
 app.use('/spirits', spiritRoute)
