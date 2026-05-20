@@ -21,7 +21,6 @@ app.use(urlEncodedParser);
 
 app.use(cors({
     origin: [
-        "https://personal-project-the-velvet-hideaway-frontend-qm66hbb8m.vercel.app",
         "https://personal-project-the-velvet-hideaway-frontend.vercel.app",
         process.env.FRONTEND_URL,
         "http://localhost:5173",
