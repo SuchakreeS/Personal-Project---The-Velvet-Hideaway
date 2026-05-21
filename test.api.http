@@ -1,5 +1,7 @@
 @BASE_URL= http://localhost:8875
-@token= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNzc0OTMxOTMxLCJleHAiOjE3NzYyMjc5MzF9.HOxnl4Asci3qB7el4wsuuzOBA7mA4gTPe_Zlg3jB-OA
+@token= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzkzMzM4MDMsImV4cCI6MTc4MDYyOTgwM30.lITrRxN6PUxnPUhh06rlRygP_yJKH31lKETa1AI-oRo
+
+@aiToken=AIzaSyD7v2IFSKUC9l8SgQhF16PiexMQLxp7-D4
 
 # Admin Token
 @token2= Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzc1MDE1Nzc2LCJleHAiOjE3NzYzMTE3NzZ9.oz_Pe3Z9a5s_QEgTSHq78QEw_NP-Z_uPX-4XyOgqERw
@@ -9,8 +11,8 @@ POST {{BASE_URL}}/auth/register
 Content-Type: application/json
 
 {
-    "username": "testuser08",
-    "email": "testuser08@mail.mail",
+    "username": "testuser",
+    "email": "testuser@mail.mail",
     "password": "123456",
     "confirmPassword": "123456"
 }
@@ -20,7 +22,7 @@ POST {{BASE_URL}}/auth/Login
 Content-Type: application/json
 
 {
-    "email": "testadmin@mail.mail",
+    "email": "testuser@mail.mail",
     "password": "123456"
 }
 
@@ -141,3 +143,12 @@ Authorization: {{token2}}
 
 ###Not Found
 GET {{BASE_URL}}/fail
+
+###Test Ai Chat
+POST {{BASE_URL}}/ai/chat
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+    "message" : "Give me a simple recipe for Rum based cocktail"
+}

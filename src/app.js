@@ -7,6 +7,7 @@ import cors from 'cors'
 import recipeRoute from './routes/recipe.route.js'
 import categoryRoute from './routes/category.route.js'
 import spiritRoute from './routes/base.spirit.route.js'
+import aiRoute from './routes/ai.route.js'
 // import categoryRoute from './routes/category.route.js'
 
 const app = express()
@@ -36,6 +37,7 @@ app.use('/recipes', recipeRoute)
 app.use('/categories', categoryRoute)
 app.use('/spirits', spiritRoute)
 app.use('/user', userRoute)
+app.use('/ai', aiRoute)
 
 app.use( (req, res, next) => {
     return next (createHttpError.NotFound())
